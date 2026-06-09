@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WCMS Summer Countdown</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #111; /* Dark background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            color: #ff4444; /* Matches the red text in your screenshot */
+            text-align: center;
+        }
+
+        #countdown {
+            font-family: 'Creepster', cursive;
+            font-size: 80px; 
+            color: red !important;
+            margin-bottom: 50px;
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+
+        .description {
+            font-size: 20px;
+            max-width: 800px;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+
+        /* Styles for the black bar at the bottom containing the player and credit */
+        .footer-bar {
+            background-color: #000;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .credit-text {
+            color: #6a0dad; /* Purple text for the credit */
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="countdown"></div>
+
+    <p class="description">
+        Summer, aka when this countdown ended is when school is over. The countdown told how long until June 9th at 11:30 AM, the time we got out of the last day for San Juan students. Enjoy your summer!
+    </p>
+
+    <div class="footer-bar">
+        <audio controls>
+            <source src="music.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        
+        <div class="credit-text">Countdown made courtesy of Rafa R, WCMS!</div>
+    </div>
+
+    <script>
+        // Set target to June 9, 2026, 11:30:00
+        const target = new Date("2026-06-09T11:30:00").getTime();
+        
+        // Quick check so it doesn't say "undefined" for the first second it loads
+        if (new Date().getTime() >= target) {
+            document.getElementById("countdown").innerText = "It's Summer!!";
+        }
+        
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const diff = target - now;
+            
+            // If the countdown is over, stop the math and show the text
+            if (diff <= 0) {
+                clearInterval(timer);
+                document.getElementById("countdown").innerText = "It's Summer!!";
+                return; // Stop running the rest of the function
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById("countdown").innerHTML = "Time until summer:<br>" + d + "d " + h + "h " + m + "m " + s + "s ";
+            
+        }, 1000);
+    </script>
+</body>
+</html>
