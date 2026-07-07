@@ -3,45 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WCMS Summer Countdown</title>
+    <title>WCMS Summer Hub</title>
     
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
-    
+    <!-- Creepster Font -->
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     
     <style>
+        /* 1. VISUAL UPDATES & CUSTOM CURSOR */
         body {
-            background-color: #111; /* Dark background */
+            background-color: #111;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             font-family: sans-serif;
-            color: #ff4444; /* Matches the red text in your screenshot */
+            color: #ff4444;
             text-align: center;
+            overflow-x: hidden; /* Stops horizontal scrolling from particles */
+            /* Custom Red Crosshair SVG Cursor */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>') 12 12, auto;
         }
 
+        /* 2. THE HOVER GLOW EFFECT */
         #countdown {
             font-family: 'Creepster', cursive;
             font-size: 80px; 
             color: red !important;
-            margin-bottom: 50px;
+            margin-top: 80px;
             white-space: nowrap;
             line-height: 1.2;
+            transition: text-shadow 0.3s ease-in-out; /* Makes the glow smooth */
+            z-index: 10;
+        }
+        
+        #countdown:hover {
+            text-shadow: 0 0 10px red, 0 0 20px red, 0 0 40px darkred;
+        }
+
+        #countup {
+            font-size: 24px;
+            color: #ff4444;
+            margin-bottom: 30px;
+            z-index: 10;
         }
 
         .description {
-            font-size: 20px;
+            font-size: 18px;
             max-width: 800px;
             line-height: 1.5;
             padding: 0 20px;
+            z-index: 10;
         }
 
-        /* Styles for the black bar at the bottom containing the player and credit */
+        /* 3. BUCKET LIST STYLING */
+        .hub-container {
+            border: 2px solid #333;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            width: 350px;
+            margin-top: 30px;
+            margin-bottom: 120px; /* Space for the footer */
+            z-index: 10;
+        }
+
+        .hub-container h3 {
+            margin-top: 0;
+            color: #ff4444;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        #taskInput {
+            flex: 1;
+            padding: 10px;
+            background-color: #222;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #ff4444;
+            color: #111;
+            border: none;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: inherit; /* Inherits your custom crosshair */
+            transition: background-color 0.2s;
+        }
+
+        button:hover { background-color: #ff6666; }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #222;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #ff4444;
+        }
+
+        .delete-btn {
+            background-color: transparent;
+            color: #888;
+            padding: 5px;
+        }
+        
+        .delete-btn:hover { color: #ff4444; background-color: transparent;}
+
+        /* 4. PARTICLE ANIMATION STYLING */
+        .spark {
+            position: fixed;
+            background-color: red;
+            width: 3px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 5px red;
+            pointer-events: none; /* Stops sparks from blocking your mouse clicks */
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* FOOTER */
         .footer-bar {
             background-color: #000;
             width: 100%;
@@ -50,61 +153,140 @@
             justify-content: center;
             align-items: center;
             gap: 30px;
-            position: absolute;
+            position: fixed;
             bottom: 0;
+            z-index: 20;
         }
 
-        .credit-text {
-            color: #6a0dad; /* Purple text for the credit */
-            font-size: 16px;
-        }
+        .credit-text { color: #6a0dad; font-size: 16px; }
     </style>
 </head>
 <body>
 
+    <!-- Header & Timers -->
     <div id="countdown"></div>
+    <div id="countup"></div>
 
     <p class="description">
-        Summer, aka when this countdown ended is when school is over. The countdown told how long until June 9th at 11:30 AM, the time we got out of the last day for San Juan students. Enjoy your summer!
+        Summer, aka when this countdown ended is when school is over. Enjoy your summer!
     </p>
 
+    <!-- The Summer Bucket List -->
+    <div class="hub-container">
+        <h3>Summer Bucket List</h3>
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Add a project or goal...">
+            <button onclick="addTask()">Add</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+
+    <!-- Footer -->
     <div class="footer-bar">
         <audio controls>
-            <source src="music.mp3" type="audio/mpeg">
+            <!-- Make sure your music file name is correct here -->
+            <source src="music.mp3" type="audio/mpeg"> 
             Your browser does not support the audio element.
         </audio>
-        
         <div class="credit-text">Countdown made courtesy of Rafa R, WCMS!</div>
     </div>
 
     <script>
-        // Set target to June 9, 2026, 11:30:00
+        // --- TIMER LOGIC ---
         const target = new Date("2026-06-09T11:30:00").getTime();
-        
-        // Quick check so it doesn't say "undefined" for the first second it loads
-        if (new Date().getTime() >= target) {
-            document.getElementById("countdown").innerText = "It's Summer!!";
-        }
         
         const timer = setInterval(function() {
             const now = new Date().getTime();
             const diff = target - now;
             
-            // If the countdown is over, stop the math and show the text
+            const countdownEl = document.getElementById("countdown");
+            const countupEl = document.getElementById("countup");
+            
             if (diff <= 0) {
-                clearInterval(timer);
-                document.getElementById("countdown").innerText = "It's Summer!!";
-                return; // Stop running the rest of the function
+                // The Count-UP Logic (Since summer already started)
+                countdownEl.innerText = "It's Summer!!";
+                
+                const pastDiff = now - target;
+                const d = Math.floor(pastDiff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((pastDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((pastDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((pastDiff % (1000 * 60)) / 1000);
+                
+                countupEl.innerHTML = `Time since school ended:<br>${d}d ${h}h ${m}m ${s}s`;
+            } else {
+                // The standard countdown logic just in case
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                countdownEl.innerHTML = "Time until summer:<br>" + d + "d " + h + "h " + m + "m " + s + "s ";
             }
-
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById("countdown").innerHTML = "Time until summer:<br>" + d + "d " + h + "h " + m + "m " + s + "s ";
-            
         }, 1000);
+
+        // --- PARTICLE LOGIC ---
+        function createSpark() {
+            const spark = document.createElement("div");
+            spark.classList.add("spark");
+            
+            // Randomize where the spark starts horizontally
+            spark.style.left = Math.random() * 100 + "vw";
+            
+            // Randomize how fast it falls (between 2 and 5 seconds)
+            spark.style.animationDuration = (Math.random() * 3 + 2) + "s"; 
+            
+            document.body.appendChild(spark);
+            
+            // Delete the spark HTML after 5 seconds so the browser doesn't lag
+            setTimeout(() => { spark.remove(); }, 5000);
+        }
+        
+        // Spawn a new spark every 300 milliseconds
+        setInterval(createSpark, 300);
+
+        // --- BUCKET LIST LOGIC (Local Storage) ---
+        const taskInput = document.getElementById("taskInput");
+        const taskList = document.getElementById("taskList");
+
+        // Grab tasks from browser memory (or start an empty list if none exist)
+        let tasks = JSON.parse(localStorage.getItem("summerTasks")) || [];
+
+        function renderTasks() {
+            taskList.innerHTML = ""; // Clear the list visual
+            tasks.forEach((task, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <span>${task}</span> 
+                    <button class="delete-btn" onclick="deleteTask(${index})">X</button>
+                `;
+                taskList.appendChild(li);
+            });
+        }
+
+        function addTask() {
+            const text = taskInput.value.trim();
+            if (text !== "") {
+                tasks.push(text); // Add to the array
+                localStorage.setItem("summerTasks", JSON.stringify(tasks)); // Save to browser memory
+                taskInput.value = ""; // Clear the text box
+                renderTasks(); // Update the screen
+            }
+        }
+
+        // Allow pressing "Enter" to add a task
+        taskInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                addTask();
+            }
+        });
+
+        function deleteTask(index) {
+            tasks.splice(index, 1); // Remove from the array
+            localStorage.setItem("summerTasks", JSON.stringify(tasks)); // Save the new list to memory
+            renderTasks(); // Update the screen
+        }
+        
+        // Render the list when the page first loads
+        renderTasks();
     </script>
 </body>
 </html>
