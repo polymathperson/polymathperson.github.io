@@ -24,12 +24,12 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>') 12 12, auto;
         }
 
-        /* THE HOVER GLOW EFFECT */
+        /* THE HOVER GLOW EFFECT (Subtle version) */
         #countdown {
             font-family: 'Creepster', cursive;
             font-size: 80px; 
             color: red !important;
-            margin-top: 80px;
+            margin-top: 25vh; /* Pushed down to center nicely without the list */
             white-space: nowrap;
             line-height: 1.2;
             transition: text-shadow 0.3s ease-in-out; 
@@ -37,7 +37,7 @@
         }
         
         #countdown:hover {
-            text-shadow: 0 0 10px red, 0 0 20px red, 0 0 40px darkred;
+            text-shadow: 0 0 8px red; /* Much softer glow */
         }
 
         #countup {
@@ -54,77 +54,6 @@
             padding: 0 20px;
             z-index: 10;
         }
-
-        /* HUB STYLING */
-        .hub-container {
-            border: 2px solid #333;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 12px;
-            padding: 25px;
-            width: 350px;
-            margin-top: 30px;
-            margin-bottom: 120px; 
-            z-index: 10;
-        }
-
-        .hub-container h3 {
-            margin-top: 0;
-            color: #ff4444;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        #taskInput {
-            flex: 1;
-            padding: 10px;
-            background-color: #222;
-            border: 1px solid #444;
-            color: white;
-            border-radius: 5px;
-        }
-
-        button {
-            padding: 10px 15px;
-            background-color: #ff4444;
-            color: #111;
-            border: none;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: inherit; 
-            transition: background-color 0.2s;
-        }
-
-        button:hover { background-color: #ff6666; }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            text-align: left;
-        }
-
-        li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #222;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            border-left: 4px solid #ff4444;
-        }
-
-        .delete-btn {
-            background-color: transparent;
-            color: #888;
-            padding: 5px;
-        }
-        
-        .delete-btn:hover { color: #ff4444; background-color: transparent;}
 
         /* PARTICLE ANIMATION STYLING */
         .spark {
@@ -143,7 +72,7 @@
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
 
-        /* FOOTER */
+        /* FOOTER (Cleaned up) */
         .footer-bar {
             background-color: #000;
             width: 100%;
@@ -151,7 +80,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
             position: fixed;
             bottom: 0;
             z-index: 20;
@@ -170,23 +98,8 @@
         The countdown tells how long until June 8th at 11:30 AM, the time we get out of the last day for San Juan students. Survive the school year!
     </p>
 
-    <!-- The School Goals List -->
-    <div class="hub-container">
-        <h3>School Year Goals</h3>
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Add an assignment or goal...">
-            <button onclick="addTask()">Add</button>
-        </div>
-        <ul id="taskList"></ul>
-    </div>
-
     <!-- Footer -->
     <div class="footer-bar">
-        <audio controls>
-            <!-- Make sure your music file name is correct here -->
-            <source src="music.mp3" type="audio/mpeg"> 
-            Your browser does not support the audio element.
-        </audio>
         <div class="credit-text">Countdown made courtesy of Rafa R, WCMS!</div>
     </div>
 
@@ -207,19 +120,30 @@
                 countdownEl.innerText = "It's Summer!!";
                 
                 const pastDiff = now - target;
-                const d = Math.floor(pastDiff / (1000 * 60 * 60 * 24));
+                const totalDays = Math.floor(pastDiff / (1000 * 60 * 60 * 24));
+                
+                // Calculate Months and remaining days (assuming ~30 days per month)
+                const mo = Math.floor(totalDays / 30);
+                const d = totalDays % 30;
+                
                 const h = Math.floor((pastDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((pastDiff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((pastDiff % (1000 * 60)) / 1000);
                 
-                countupEl.innerHTML = `Time since school ended:<br>${d}d ${h}h ${m}m ${s}s`;
+                countupEl.innerHTML = `Time since school ended:<br>${mo}mo ${d}d ${h}h ${m}m ${s}s`;
             } else {
                 // The standard countdown logic
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+                
+                // Calculate Months and remaining days
+                const mo = Math.floor(totalDays / 30);
+                const d = totalDays % 30;
+                
                 const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
-                countdownEl.innerHTML = "Time until summer:<br>" + d + "d " + h + "h " + m + "m " + s + "s ";
+                
+                countdownEl.innerHTML = "Time until summer:<br>" + mo + "mo " + d + "d " + h + "h " + m + "m " + s + "s ";
                 countupEl.innerHTML = ""; // Clears the countup text
             }
         }, 1000);
@@ -238,49 +162,6 @@
         }
         
         setInterval(createSpark, 300);
-
-        // --- BUCKET LIST LOGIC (Local Storage) ---
-        const taskInput = document.getElementById("taskInput");
-        const taskList = document.getElementById("taskList");
-
-        // Keep using "summerTasks" in memory so you don't lose any existing items
-        let tasks = JSON.parse(localStorage.getItem("summerTasks")) || [];
-
-        function renderTasks() {
-            taskList.innerHTML = ""; 
-            tasks.forEach((task, index) => {
-                const li = document.createElement("li");
-                li.innerHTML = `
-                    <span>${task}</span> 
-                    <button class="delete-btn" onclick="deleteTask(${index})">X</button>
-                `;
-                taskList.appendChild(li);
-            });
-        }
-
-        function addTask() {
-            const text = taskInput.value.trim();
-            if (text !== "") {
-                tasks.push(text); 
-                localStorage.setItem("summerTasks", JSON.stringify(tasks)); 
-                taskInput.value = ""; 
-                renderTasks(); 
-            }
-        }
-
-        taskInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                addTask();
-            }
-        });
-
-        function deleteTask(index) {
-            tasks.splice(index, 1); 
-            localStorage.setItem("summerTasks", JSON.stringify(tasks)); 
-            renderTasks(); 
-        }
-        
-        renderTasks();
     </script>
 </body>
 </html>
