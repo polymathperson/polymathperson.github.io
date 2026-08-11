@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WCMS Summer Hub</title>
+    <title>WCMS Countdown</title>
     
     <!-- Creepster Font -->
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. VISUAL UPDATES & CUSTOM CURSOR */
+        /* VISUAL UPDATES & CUSTOM CURSOR */
         body {
             background-color: #111;
             display: flex;
@@ -20,12 +20,11 @@
             font-family: sans-serif;
             color: #ff4444;
             text-align: center;
-            overflow-x: hidden; /* Stops horizontal scrolling from particles */
-            /* Custom Red Crosshair SVG Cursor */
+            overflow-x: hidden; 
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>') 12 12, auto;
         }
 
-        /* 2. THE HOVER GLOW EFFECT */
+        /* THE HOVER GLOW EFFECT */
         #countdown {
             font-family: 'Creepster', cursive;
             font-size: 80px; 
@@ -33,7 +32,7 @@
             margin-top: 80px;
             white-space: nowrap;
             line-height: 1.2;
-            transition: text-shadow 0.3s ease-in-out; /* Makes the glow smooth */
+            transition: text-shadow 0.3s ease-in-out; 
             z-index: 10;
         }
         
@@ -56,7 +55,7 @@
             z-index: 10;
         }
 
-        /* 3. BUCKET LIST STYLING */
+        /* HUB STYLING */
         .hub-container {
             border: 2px solid #333;
             background-color: rgba(0, 0, 0, 0.8);
@@ -64,7 +63,7 @@
             padding: 25px;
             width: 350px;
             margin-top: 30px;
-            margin-bottom: 120px; /* Space for the footer */
+            margin-bottom: 120px; 
             z-index: 10;
         }
 
@@ -95,7 +94,7 @@
             border: none;
             font-weight: bold;
             border-radius: 5px;
-            cursor: inherit; /* Inherits your custom crosshair */
+            cursor: inherit; 
             transition: background-color 0.2s;
         }
 
@@ -127,7 +126,7 @@
         
         .delete-btn:hover { color: #ff4444; background-color: transparent;}
 
-        /* 4. PARTICLE ANIMATION STYLING */
+        /* PARTICLE ANIMATION STYLING */
         .spark {
             position: fixed;
             background-color: red;
@@ -135,7 +134,7 @@
             height: 10px;
             border-radius: 50%;
             box-shadow: 0 0 5px red;
-            pointer-events: none; /* Stops sparks from blocking your mouse clicks */
+            pointer-events: none; 
             animation: fall linear infinite;
         }
 
@@ -168,14 +167,14 @@
     <div id="countup"></div>
 
     <p class="description">
-        Summer, aka when this countdown ended is when school is over. Enjoy your summer!
+        The countdown tells how long until June 8th at 11:30 AM, the time we get out of the last day for San Juan students. Survive the school year!
     </p>
 
-    <!-- The Summer Bucket List -->
+    <!-- The School Goals List -->
     <div class="hub-container">
-        <h3>Summer Bucket List</h3>
+        <h3>School Year Goals</h3>
         <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Add a project or goal...">
+            <input type="text" id="taskInput" placeholder="Add an assignment or goal...">
             <button onclick="addTask()">Add</button>
         </div>
         <ul id="taskList"></ul>
@@ -193,7 +192,8 @@
 
     <script>
         // --- TIMER LOGIC ---
-        const target = new Date("2026-06-09T11:30:00").getTime();
+        // Set target to June 8, 2027, 11:30:00
+        const target = new Date("2027-06-08T11:30:00").getTime();
         
         const timer = setInterval(function() {
             const now = new Date().getTime();
@@ -203,7 +203,7 @@
             const countupEl = document.getElementById("countup");
             
             if (diff <= 0) {
-                // The Count-UP Logic (Since summer already started)
+                // The Count-UP Logic (When summer starts again)
                 countdownEl.innerText = "It's Summer!!";
                 
                 const pastDiff = now - target;
@@ -214,12 +214,13 @@
                 
                 countupEl.innerHTML = `Time since school ended:<br>${d}d ${h}h ${m}m ${s}s`;
             } else {
-                // The standard countdown logic just in case
+                // The standard countdown logic
                 const d = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
                 countdownEl.innerHTML = "Time until summer:<br>" + d + "d " + h + "h " + m + "m " + s + "s ";
+                countupEl.innerHTML = ""; // Clears the countup text
             }
         }, 1000);
 
@@ -228,30 +229,25 @@
             const spark = document.createElement("div");
             spark.classList.add("spark");
             
-            // Randomize where the spark starts horizontally
             spark.style.left = Math.random() * 100 + "vw";
-            
-            // Randomize how fast it falls (between 2 and 5 seconds)
             spark.style.animationDuration = (Math.random() * 3 + 2) + "s"; 
             
             document.body.appendChild(spark);
             
-            // Delete the spark HTML after 5 seconds so the browser doesn't lag
             setTimeout(() => { spark.remove(); }, 5000);
         }
         
-        // Spawn a new spark every 300 milliseconds
         setInterval(createSpark, 300);
 
         // --- BUCKET LIST LOGIC (Local Storage) ---
         const taskInput = document.getElementById("taskInput");
         const taskList = document.getElementById("taskList");
 
-        // Grab tasks from browser memory (or start an empty list if none exist)
+        // Keep using "summerTasks" in memory so you don't lose any existing items
         let tasks = JSON.parse(localStorage.getItem("summerTasks")) || [];
 
         function renderTasks() {
-            taskList.innerHTML = ""; // Clear the list visual
+            taskList.innerHTML = ""; 
             tasks.forEach((task, index) => {
                 const li = document.createElement("li");
                 li.innerHTML = `
@@ -265,14 +261,13 @@
         function addTask() {
             const text = taskInput.value.trim();
             if (text !== "") {
-                tasks.push(text); // Add to the array
-                localStorage.setItem("summerTasks", JSON.stringify(tasks)); // Save to browser memory
-                taskInput.value = ""; // Clear the text box
-                renderTasks(); // Update the screen
+                tasks.push(text); 
+                localStorage.setItem("summerTasks", JSON.stringify(tasks)); 
+                taskInput.value = ""; 
+                renderTasks(); 
             }
         }
 
-        // Allow pressing "Enter" to add a task
         taskInput.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 addTask();
@@ -280,12 +275,11 @@
         });
 
         function deleteTask(index) {
-            tasks.splice(index, 1); // Remove from the array
-            localStorage.setItem("summerTasks", JSON.stringify(tasks)); // Save the new list to memory
-            renderTasks(); // Update the screen
+            tasks.splice(index, 1); 
+            localStorage.setItem("summerTasks", JSON.stringify(tasks)); 
+            renderTasks(); 
         }
         
-        // Render the list when the page first loads
         renderTasks();
     </script>
 </body>
