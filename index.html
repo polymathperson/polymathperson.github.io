@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     
     <style>
-        /* VISUAL UPDATES & CUSTOM CURSOR */
+        /* UPDATED: Default cursor */
         body {
             background-color: #111;
             display: flex;
@@ -21,15 +21,15 @@
             color: #ff4444;
             text-align: center;
             overflow-x: hidden; 
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>') 12 12, auto;
+            cursor: auto; 
         }
 
-        /* THE HOVER GLOW EFFECT (Subtle version) */
+        /* UPDATED: Larger font size */
         #countdown {
             font-family: 'Creepster', cursive;
-            font-size: 80px; 
+            font-size: 110px; 
             color: red !important;
-            margin-top: 25vh; /* Pushed down to center nicely without the list */
+            margin-top: 25vh;
             white-space: nowrap;
             line-height: 1.2;
             transition: text-shadow 0.3s ease-in-out; 
@@ -37,7 +37,7 @@
         }
         
         #countdown:hover {
-            text-shadow: 0 0 8px red; /* Much softer glow */
+            text-shadow: 0 0 8px red;
         }
 
         #countup {
@@ -55,7 +55,7 @@
             z-index: 10;
         }
 
-        /* FOOTER (Cleaned up) */
+        /* FOOTER */
         .footer-bar {
             background-color: #000;
             width: 100%;
@@ -77,8 +77,9 @@
     <div id="countdown"></div>
     <div id="countup"></div>
 
+    <!-- UPDATED: Description text removed the school survival line -->
     <p class="description">
-        The countdown tells how long until June 8th at 11:30 AM, the time we get out of the last day for San Juan students. Survive the school year!
+        The countdown tells how long until June 8th at 11:30 AM, the time we get out of the last day for San Juan students.
     </p>
 
     <!-- Footer -->
@@ -99,13 +100,12 @@
             const countupEl = document.getElementById("countup");
             
             if (diff <= 0) {
-                // The Count-UP Logic (When summer starts again)
+                // The Count-UP Logic
                 countdownEl.innerText = "It's Summer!!";
                 
                 const pastDiff = now - target;
                 const totalDays = Math.floor(pastDiff / (1000 * 60 * 60 * 24));
                 
-                // Calculate Months and remaining days (assuming ~30 days per month)
                 const mo = Math.floor(totalDays / 30);
                 const d = totalDays % 30;
                 
@@ -118,7 +118,6 @@
                 // The standard countdown logic
                 const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
                 
-                // Calculate Months and remaining days
                 const mo = Math.floor(totalDays / 30);
                 const d = totalDays % 30;
                 
@@ -127,7 +126,7 @@
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
                 
                 countdownEl.innerHTML = "Time until summer:<br>" + mo + "mo " + d + "d " + h + "h " + m + "m " + s + "s ";
-                countupEl.innerHTML = ""; // Clears the countup text
+                countupEl.innerHTML = "";
             }
         }, 1000);
     </script>
